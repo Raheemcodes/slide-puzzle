@@ -1,0 +1,119 @@
+@import "./../../shared/shared";
+
+:host {
+  @include centered();
+}
+
+.puzzle {
+  position: relative;
+  width: calc(100vw - toRem(32));
+  height: calc(100vw - toRem(32));
+  max-width: 40rem;
+  max-height: 40rem;
+  background-color: var(--main-brown);
+  border: toRem(15) solid var(--main-brown);
+  border-radius: toRem(8);
+  box-shadow: inset 2px 2px 3px 3px rgb(0 0 0 / 20%),
+    inset 0 0 4px 4px rgb(0 0 0 / 20%), 5px 5px 10px 10px rgb(0 0 0 / 40%);
+  overflow: hidden;
+
+  &.height {
+    width: calc(100vh - toRem(96 + 32));
+    height: calc(100vh - toRem(96 + 32));
+  }
+
+  @media (min-width: $sm) and (min-height: $sm) {
+    border: toRem(25) solid var(--main-brown);
+    border-radius: toRem(20);
+    box-shadow: inset 2px 2px 3px 3px rgb(0 0 0 / 20%),
+      inset 0 0 4px 4px rgb(0 0 0 / 20%), 5px 5px 10px 10px rgb(0 0 0 / 40%);
+  }
+  @media (min-width: $xl) {
+    border: toRem(40) solid var(--main-brown);
+    border-radius: toRem(25);
+    box-shadow: inset 2px 2px 3px 3px rgb(0 0 0 / 20%),
+      inset 0 0 4px 4px rgb(0 0 0 / 20%), 5px 5px 10px 10px rgb(0 0 0 / 40%);
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000;
+    border-left: toRem(8) solid #0000;
+    border-top: toRem(8) solid #0000;
+    box-shadow: inset 2px 2px 5px 5px rgb(0 0 0 / 30%);
+  }
+}
+
+.tile-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  border-radius: toRem(4);
+  background-color: #0000;
+  grid-row: 1;
+  grid-column: 1;
+  transition: all 0.3s ease-out;
+  box-shadow: 2px 2px 5px 5px rgb(0 0 0 / 30%);
+  padding: 0.05rem;
+  @include centered();
+
+  &::before {
+    position: absolute;
+    content: "";
+    background-color: var(--main-brown);
+    top: 100%;
+    width: 60%;
+    height: toRem(9);
+    border-bottom-left-radius: toRem(8);
+    border-bottom-right-radius: toRem(8);
+    box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
+    z-index: -1;
+  }
+  &::after {
+    position: absolute;
+    content: "";
+    background-color: var(--main-brown);
+    left: 100%;
+    width: toRem(9);
+    box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
+    height: 60%;
+    border-top-right-radius: toRem(8);
+    border-bottom-right-radius: toRem(8);
+    z-index: -1;
+  }
+}
+
+.pic-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: toRem(4);
+  overflow: hidden;
+}
+
+.after {
+  width: 300%;
+  height: 300%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left top;
+  overflow: hidden;
+  content: "";
+  position: absolute;
+}

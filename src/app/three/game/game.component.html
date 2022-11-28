@@ -1,0 +1,24 @@
+<div class="puzzle" #puzzleEl>
+  <div class="tile-container">
+    <div
+      class="tile"
+      *ngFor="let tile of puzzle"
+      [ngStyle]="{
+        transform:
+          'translate(' + tile.posX! * 100 + '%,' + tile.posY! * 100 + '%)',
+        'z-index': tile.posX! + tile.posY!
+      }"
+    >
+      <div class="pic-container">
+        <div
+          class="after"
+          [ngStyle]="{
+            'background-image': 'url(' + src + ')',
+            'top.%': -tile.picY! * 100,
+            'left.%': -tile.picX! * 100
+          }"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

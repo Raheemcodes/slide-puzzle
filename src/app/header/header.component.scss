@@ -1,0 +1,215 @@
+@import "./../shared/shared";
+
+.main-header {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  @include between-centered();
+  padding: 0 toRem(16);
+
+  @media (min-width: $lg) {
+    padding: 0 toRem(80);
+  }
+  @media (min-width: $two-xl) {
+    padding: 0 toRem(101);
+  }
+
+  .logo {
+    width: 6rem;
+    height: 6rem;
+
+    @include fade-hover(opacity, 300ms, 0.6);
+
+    span {
+      color: var(--main-blue);
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+
+    &.opened {
+      img {
+        display: none;
+      }
+    }
+  }
+
+  .toggle-btn {
+    background-color: #0000;
+    width: toRem(32);
+    height: toRem(24);
+    padding: toRem(5) 0;
+    @include centered();
+    justify-content: space-between;
+    flex-direction: column;
+
+    .toggle-line {
+      transition: all 0.3s ease-out;
+      background-color: var(--main-brown);
+      width: toRem(24);
+      height: toRem(2);
+    }
+
+    &.opened {
+      position: relative;
+      justify-content: flex-start;
+
+      .toggle-line {
+        background-color: var(--main-color);
+
+        &.top {
+          position: absolute;
+          transform: rotateZ(45deg);
+        }
+
+        &.bottom {
+          position: absolute;
+          transform: rotateZ(-45deg);
+        }
+      }
+    }
+
+    @media (min-width: $md) {
+      display: none;
+    }
+  }
+}
+
+// Desktop Style
+.desktop-nav {
+  display: none;
+  width: toRem(562);
+
+  @media (min-width: $md) {
+    @include centered();
+    position: absolute;
+    left: 50%;
+    margin-left: toRem(calc(-562 / 2));
+    right: 0;
+  }
+
+  @media (min-width: $two-xl) {
+    width: toRem(624);
+    margin-left: toRem(calc(-624 / 2));
+  }
+
+  .nav-list {
+    list-style: none;
+    @include display-flex();
+    gap: toRem(80 - 16);
+
+    @media (min-width: $two-xl) {
+      gap: toRem(144 - 16);
+    }
+
+    .nav-item {
+      @include centered();
+      flex-direction: column;
+      cursor: pointer;
+      padding: 0.5rem;
+      font-size: toRem(20);
+      font-weight: 700;
+      line-height: toRem(29);
+      color: var(--main-brown);
+
+      @media (min-width: $two-xl) {
+        font-size: toRem(24);
+      }
+
+      a {
+        cursor: pointer;
+        font-size: toRem(20);
+        font-weight: 700;
+        line-height: toRem(29);
+        color: var(--main-brown);
+      }
+
+      .border {
+        width: 0%;
+        transition: width 0.2s ease-out;
+        height: toRem(2);
+        background-color: var(--main-brown);
+      }
+
+      &.active,
+      &:hover {
+        .border {
+          width: 100%;
+        }
+      }
+
+      &:active {
+        .border {
+          width: 50%;
+        }
+      }
+    }
+  }
+}
+
+// mobile style
+.mobile-nav {
+  display: none;
+  position: fixed;
+  z-index: 4;
+  min-width: toRem(280);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  right: -100vw;
+  background-color: var(--main-brown);
+  transition: all 0.3s ease-out;
+  padding: toRem(96) 0 toRem(54);
+  overflow: auto;
+  @include custom-scrollbar();
+
+  .nav-list__container {
+    @include column-between();
+    width: 100%;
+    height: 100%;
+    gap: toRem(48);
+
+    .nav-list {
+      @include column-flex();
+      margin-top: 20%;
+      width: 100%;
+      list-style: none;
+      gap: toRem(64 - 32);
+
+      .nav-item {
+        width: 100%;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: toRem(32);
+        line-height: toRem(29);
+        padding: toRem(16);
+        color: var(--main-color);
+
+        a {
+          width: 100%;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: toRem(32);
+          line-height: toRem(29);
+          color: var(--main-color);
+        }
+
+        &.active {
+          color: var(--green-10);
+        }
+
+        @media (hover: hover) {
+          &:hover {
+            color: var(--green-10);
+          }
+        }
+      }
+    }
+  }
+}

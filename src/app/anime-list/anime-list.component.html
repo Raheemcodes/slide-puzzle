@@ -1,0 +1,7 @@
+<h2>Select an Image!</h2>
+
+<ul>
+  <li *ngFor="let image of sharedSv.images" [routerLink]="image.id">
+    <img width="500" height="500" [ngSrc]="image.src" alt priority />
+  </li>
+</ul>

@@ -1,0 +1,55 @@
+@import "./../shared/shared";
+
+:host {
+  width: 100%;
+}
+
+h2 {
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 2rem 0 3rem;
+}
+
+ul {
+  @include between();
+  flex-wrap: wrap;
+  gap: toRem(32);
+  width: 100%;
+  list-style: none;
+
+  @media (min-width: $lg) {
+    gap: toRem(48);
+  }
+  @media (min-width: $two-xl) {
+    gap: toRem(64);
+  }
+}
+
+li {
+  @include display-flex();
+  width: 100%;
+  flex-shrink: 0;
+  cursor: pointer;
+  background-color: var(--main-brown);
+  border-radius: toRem(8);
+
+  @media screen and (min-width: toRem(540)) {
+    width: calc(50% - toRem(16));
+  }
+
+  @media screen and (min-width: $lg) {
+    width: calc(33.33% - toRem(32));
+  }
+
+  @media screen and (min-width: $lg) {
+    width: calc(33.33% - toRem(44));
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: toRem(8);
+    box-shadow: 2px 2px 5px rgba(49, 49, 49, 0.5);
+  }
+}
