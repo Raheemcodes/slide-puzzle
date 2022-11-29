@@ -17,6 +17,7 @@ ul {
   gap: toRem(32);
   width: 100%;
   list-style: none;
+  padding-bottom: toRem(64);
 
   @media (min-width: $lg) {
     gap: toRem(48);

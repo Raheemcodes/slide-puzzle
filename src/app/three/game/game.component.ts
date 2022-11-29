@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   Renderer2,
   ViewChild,
@@ -16,10 +17,12 @@ import { SharedService } from 'src/app/shared/shared.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   src!: string;
   id!: string;
   @ViewChild('puzzleEl') puzzleEl!: ElementRef<HTMLElement>;
+  isPlaying: boolean = false;
+  timeout: any;
 
   puzzle: Puz[] = [
     { picX: 0, picY: 0, posX: 0, posY: 0 },
@@ -56,7 +59,7 @@ export class GameComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private sharedSv: SharedService,
+    public sharedSv: SharedService,
     private renderer: Renderer2,
     private cd: ChangeDetectorRef
   ) {}
@@ -67,8 +70,6 @@ export class GameComponent implements OnInit {
 
     this.cd.detectChanges();
     this.resize();
-
-    // this.shuffle();
   }
 
   findImg() {
@@ -85,23 +86,88 @@ export class GameComponent implements OnInit {
   }
 
   shuffle() {
-    const puzzle = this.pos.slice();
+    if (!this.isPlaying) {
+      const puzzle = this.pos.slice();
 
-    for (var i = puzzle.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = puzzle[i];
-      puzzle[i] = puzzle[j];
-      puzzle[j] = temp;
+      for (var i = puzzle.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = puzzle[i];
+        puzzle[i] = puzzle[j];
+        puzzle[j] = temp;
+      }
+
+      for (var i = puzzle.length - 1; i >= 0; i--) {
+        puzzle[i] = { ...puzzle[i], ...this.pic[i] };
+      }
+
+      this.isPlaying = true;
+      setTimeout(() => {
+        this.puzzle = puzzle;
+      }, 300);
     }
-
-    for (var i = puzzle.length - 1; i > 0; i--) {
-      puzzle[i] = { ...puzzle[i], ...this.pic[i] };
-    }
-
-    this.puzzle = puzzle;
   }
 
-  positionImg() {}
+  slide(event: Event) {
+    const el = <HTMLElement>event.currentTarget;
+    const parent = <HTMLCollectionOf<HTMLElement>>el.parentElement?.children;
+
+    let posX = +el.dataset['posX']!;
+    let posY = +el.dataset['posY']!;
+
+    if (!this.move(el, parent, -1, 0)) {
+      // left
+
+      const newPosX = --posX;
+      el.dataset['posX'] = newPosX.toString();
+    } else if (!this.move(el, parent, 1, 0)) {
+      // right
+
+      const newPosX = ++posX;
+      el.dataset['posX'] = newPosX.toString();
+    } else if (!this.move(el, parent, 0, -1)) {
+      // top
+
+      const newPosY = --posY;
+      el.dataset['posY'] = newPosY.toString();
+    } else if (!this.move(el, parent, 0, 1)) {
+      // bottom
+
+      const newPosY = ++posY;
+      el.dataset['posY'] = newPosY.toString();
+    }
+
+    this.renderer.setStyle(el, 'z-index', posX + posY);
+    this.renderer.setStyle(
+      el,
+      'transform',
+      `translate(${posX * 100}%, ${posY * 100}%)`
+    );
+  }
+
+  move(
+    el: HTMLElement,
+    parent: HTMLCollectionOf<HTMLElement>,
+    x: number,
+    y: number
+  ) {
+    const posX: number = +el.dataset['posX']!;
+    const posY: number = +el.dataset['posY']!;
+    const newPosX = posX + x > 2 || posX + x < 0 ? posX : posX + x;
+    const newPosY = posY + y > 2 || posY + y < 0 ? posY : posY + y;
+
+    return Array.from(parent).some((ele) => {
+      if (
+        +ele.dataset['posX']! == newPosX &&
+        +ele.dataset['posY']! == newPosY
+      ) {
+        return true;
+      } else return false;
+    });
+  }
 
   compare() {}
+
+  ngOnDestroy(): void {
+    clearTimeout(this.timeout);
+  }
 }

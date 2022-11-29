@@ -2,23 +2,44 @@
   <div class="tile-container">
     <div
       class="tile"
+      [attr.data-pic-x]="tile.picX"
+      [attr.data-pic-y]="tile.picX"
+      [attr.data-pos-x]="tile.posX"
+      [attr.data-pos-y]="tile.posY"
       *ngFor="let tile of puzzle"
-      [ngStyle]="{
-        transform:
-          'translate(' + tile.posX! * 100 + '%,' + tile.posY! * 100 + '%)',
-        'z-index': tile.posX! + tile.posY!
-      }"
+      (click)="slide($event)"
+      attr.style="transform: translate({{ tile.posX! * 100 }}%,{{
+        tile.posY! * 100
+      }}%); z-index: {{ tile.posX! + tile.posY! }}"
     >
       <div class="pic-container">
         <div
           class="after"
-          [ngStyle]="{
-            'background-image': 'url(' + src + ')',
-            'top.%': -tile.picY! * 100,
-            'left.%': -tile.picX! * 100
-          }"
+          attr.style="background-image: url({{ src }});top: {{
+            -tile.picY! * 100
+          }}%; left: {{ -tile.picX! * 100 }}%"
         ></div>
       </div>
     </div>
   </div>
+</div>
+
+<div class="btn-cover">
+  <button
+    *ngIf="!isPlaying"
+    appClick="light"
+    [opacity]="0.3"
+    (click)="shuffle()"
+  >
+    Start Game
+  </button>
+
+  <button
+    *ngIf="isPlaying"
+    appClick
+    (click)="sharedSv.navigate('..')"
+    class="quit"
+  >
+    Quit
+  </button>
 </div>
