@@ -2,15 +2,13 @@
   <div class="tile-container">
     <div
       class="tile"
-      [attr.data-pic-x]="tile.picX"
-      [attr.data-pic-y]="tile.picX"
-      [attr.data-pos-x]="tile.posX"
-      [attr.data-pos-y]="tile.posY"
-      *ngFor="let tile of puzzle"
-      (click)="slide($event)"
+      *ngFor="let tile of puzzle; let i = index"
+      (click)="slide(i)"
       attr.style="transform: translate({{ tile.posX! * 100 }}%,{{
         tile.posY! * 100
-      }}%); z-index: {{ tile.posX! + tile.posY! }}"
+      }}%); z-index: {{ tile.posX! + tile.posY! }}; transition: {{
+        isSliding ? 'transform 0.2s ease-out' : 'none'
+      }};"
     >
       <div class="pic-container">
         <div
@@ -25,12 +23,7 @@
 </div>
 
 <div class="btn-cover">
-  <button
-    *ngIf="!isPlaying"
-    appClick="light"
-    [opacity]="0.3"
-    (click)="shuffle()"
-  >
+  <button *ngIf="!isPlaying" appClick="light" [opacity]="0.3" (click)="start()">
     Start Game
   </button>
 

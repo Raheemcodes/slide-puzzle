@@ -3,16 +3,20 @@ export interface Image {
   src: string;
 }
 
-export interface Tile {
+export interface Pos {
   posX: number;
   posY: number;
+  posId: number;
 }
 export interface Pic {
+  picId: number;
   picX: number;
   picY: number;
 }
 
-export interface Puz {
+export interface Tile {
+  posId?: number;
+  picId?: number;
   picX?: number;
   picY?: number;
   posX?: number;

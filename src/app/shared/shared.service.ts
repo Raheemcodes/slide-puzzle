@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { delay, of } from 'rxjs';
-import { Image } from './shared.mdel';
+import { Image, Pos, Tile } from './shared.mdel';
 
 @Injectable({
   providedIn: 'root',
@@ -20,5 +20,28 @@ export class SharedService {
       .subscribe(() => {
         this.router.navigate([page]);
       });
+  }
+
+  isSolveable(arr: Tile[]): boolean {
+    const n = 3;
+
+    let invCount: number = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+      console.log(arr[i].picId);
+      for (let j = i + 1; j < arr.length; j++) {
+        if (!!arr[i].posId && !!arr[j].posId && arr[i].posId! > arr[j].posId!) {
+          invCount++;
+        }
+      }
+    }
+
+    console.log(arr);
+
+    // const blankPosY: number = n - arr[arr.length - 1].posY!;
+
+    console.log('n:' + n + ' inv:' + invCount);
+
+    return !(invCount % 2);
   }
 }

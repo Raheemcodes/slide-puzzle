@@ -4,7 +4,8 @@
   width: 100%;
   min-height: 100%;
   @include column-between();
-  gap: toRem(32);
+  gap: toRem(48);
+  padding-bottom: toRem(64);
 }
 
 .puzzle {
@@ -24,8 +25,8 @@
   min-height: toRem(232);
 
   &.height {
-    width: calc(100vh - toRem(96 + 32));
-    height: calc(100vh - toRem(96 + 32));
+    width: calc(100vh - toRem(96 + 64));
+    height: calc(100vh - toRem(96 + 64));
   }
 
   @media (min-width: $sm) and (min-height: $sm) {
@@ -73,9 +74,9 @@
   border-radius: toRem(4);
   grid-row: 1;
   grid-column: 1;
-  @include transition(transform, 0.3s);
-  padding: 0.075rem;
+  padding: 0.05rem;
   @include centered();
+  cursor: pointer;
 
   &::before {
     position: absolute;

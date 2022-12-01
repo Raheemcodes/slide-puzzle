@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AnimeListComponent } from './anime-list/anime-list.component';
+import { CanDeactivateGuard } from './can-deactivate.guard';
 import { FiveComponent } from './five/five.component';
 import { FourComponent } from './four/four.component';
 import { GameComponent } from './three/game/game.component';
@@ -12,7 +13,11 @@ const routes: Routes = [
     component: ThreeComponent,
     children: [
       { path: '', component: AnimeListComponent },
-      { path: ':id', component: GameComponent },
+      {
+        path: ':id',
+        component: GameComponent,
+        canDeactivate: [CanDeactivateGuard],
+      },
     ],
   },
   { path: 'four', component: FourComponent },
