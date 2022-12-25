@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { delay, of } from 'rxjs';
 import { Image, Tile } from './shared.model';
 
@@ -25,22 +25,35 @@ export class SharedService {
     { id: '14', src: './../../assets/tosen.jpg' },
   ];
 
-  constructor(private router: Router) {}
+  four: Tile[] = [
+    { posX: 0, posY: 0, id: 15, picX: 3, picY: 2 },
+    { posX: 0, posY: 1, id: 8, picX: 1, picY: 3 },
+    { posX: 0, posY: 2, id: 13, picX: 3, picY: 0 },
+    { posX: 0, posY: 3, id: 14, picX: 3, picY: 1 },
+    { posX: 1, posY: 0, id: 5, picX: 1, picY: 0 },
+    { posX: 1, posY: 1, id: 7, picX: 1, picY: 2 },
+    { posX: 1, posY: 2, id: 3, picX: 0, picY: 2 },
+    { posX: 1, posY: 3, id: 2, picX: 0, picY: 1 },
+    { posX: 2, posY: 0, id: 12, picX: 2, picY: 3 },
+    { posX: 2, posY: 1, id: 11, picX: 2, picY: 2 },
+    { posX: 2, posY: 2, id: 9, picX: 2, picY: 0 },
+    { posX: 2, posY: 3, id: 4, picX: 0, picY: 3 },
+    { posX: 3, posY: 0, id: 6, picX: 1, picY: 1 },
+    { posX: 3, posY: 1, id: 10, picX: 2, picY: 1 },
+    { posX: 3, posY: 2, id: 1, picX: 0, picY: 0 },
+    { posX: 3, posY: 3, id: 0, picX: 3, picY: 3 },
+  ];
 
-  navigate(page: string) {
-    return of('navigate')
-      .pipe(delay(300))
-      .subscribe(() => {
-        this.router.navigate([page]);
-      });
-  }
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   isSolveable(arr: Tile[]): boolean {
     const n = Math.sqrt(arr.length);
 
+    console.log(n);
+
     let invCount: number = 0;
 
-    for (let i = 0; i < arr.length - 1; i++) {
+    for (let i = 0; i < arr.length; i++) {
       for (let j = i + 1; j < arr.length; j++) {
         if (arr[i].id && arr[j].id && arr[i].id! > arr[j].id!) {
           invCount++;
@@ -48,11 +61,15 @@ export class SharedService {
       }
     }
 
-    const blankPos: number = n - arr.find((el) => !el.id)?.posY!;
+    const blankPos: number = n - arr.find((el) => el.id == 0)?.posY!;
+
+    console.log('inv: ' + invCount + ', blankPos: ' + blankPos);
 
     if (n % 2) return !(invCount % 2);
-    else if (!(n % 2) && blankPos % 2) return !(invCount % 2);
-    else if (!(n % 2) && !(blankPos % 2)) return !!(invCount % 2);
-    else return false;
+    else
+      return (
+        (invCount % 2 === 0 && blankPos % 2 !== 0) ||
+        (invCount % 2 !== 0 && blankPos % 2 === 0)
+      );
   }
 }

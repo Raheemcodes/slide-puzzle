@@ -8,8 +8,8 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, UrlTree, Router } from '@angular/router';
+import { Observable, of, delay } from 'rxjs';
 import { CanComponentDeactivate } from '../can-deactivate.guard';
 import { Pic, Pos, Tile } from '../shared/shared.model';
 import { SharedService } from './../shared/shared.service';
@@ -38,6 +38,7 @@ export class GameComponent
   pos!: Pos[];
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     public sharedSv: SharedService,
     private renderer: Renderer2,
@@ -113,7 +114,8 @@ export class GameComponent
   }
 
   shuffle(): Tile[] {
-    const puzzle: Tile[] = [...this.pic];
+    const puzzle: Tile[] =
+      this.num == 4 ? [...this.sharedSv.four] : [...this.pic];
 
     for (let i = puzzle.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * puzzle.length);
@@ -134,15 +136,18 @@ export class GameComponent
       this.isPlaying = true;
       this.audio.load();
 
-      let puzzle = this.shuffle();
+      let puzzle = [...this.shuffle()];
+      console.log(puzzle);
 
       // adjust using while loop
       while (!this.sharedSv.isSolveable(puzzle)) {
-        puzzle = this.shuffle();
+        puzzle = [...this.shuffle()];
       }
 
-      puzzle = puzzle.filter((tile) => tile.id);
+      puzzle = [...puzzle].filter((tile) => tile.id);
+
       this.puzzle = puzzle;
+      console.log(this.puzzle);
     }
   }
 
@@ -189,7 +194,7 @@ export class GameComponent
         this.puzzle[idx]['posY'] = newPosY;
       }
 
-      setTimeout(() => {
+      const slideInterval = setTimeout(() => {
         this.isSliding = false;
 
         if (this.isSolved()) {
@@ -201,8 +206,10 @@ export class GameComponent
 
             this.timeout = setTimeout(this.restart.bind(this), 5000);
           }, 1000);
+
+          clearInterval(slideInterval);
         }
-      }, 200);
+      }, 300);
     }
   }
 
@@ -223,6 +230,14 @@ export class GameComponent
     return this.puzzle.every(
       (tile) => tile.picX === tile.posX && tile.picY === tile.posY
     );
+  }
+
+  navigate(page: string) {
+    return of('navigate')
+      .pipe(delay(300))
+      .subscribe(() => {
+        this.router.navigate([page + '/'], { relativeTo: this.route });
+      });
   }
 
   canDeactivate():

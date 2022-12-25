@@ -40,12 +40,7 @@
       Start Game
     </button>
 
-    <button
-      *ngIf="isPlaying"
-      appClick
-      (click)="sharedSv.navigate('..')"
-      class="quit"
-    >
+    <button *ngIf="isPlaying" appClick (click)="navigate('..')" class="quit">
       Quit
     </button>
   </div>
