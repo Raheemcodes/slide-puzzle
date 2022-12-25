@@ -1,0 +1,56 @@
+<ng-container *ngIf="!isWon">
+  <div class="puzzle" #puzzleEl>
+    <div
+      class="tile-container"
+      attr.style="grid-template-columns: repeat({{
+        num
+      }}, 1fr); grid-template-rows: repeat({{ num }}, 1fr);"
+    >
+      <div
+        class="tile"
+        *ngFor="let tile of puzzle; let i = index"
+        (click)="slide(i)"
+        attr.style="transform: translate({{ tile.posX! * 100 }}%,{{
+          tile.posY! * 100
+        }}%); z-index: {{ tile.posX! + tile.posY! }}; transition: {{
+          isSliding ? 'transform 0.2s ease-out' : 'none'
+        }};"
+      >
+        <div class="pic-container">
+          <div
+            class="after"
+            attr.style="width: {{ num * 100 }}%; height: {{
+              num * 100
+            }}%; background-image: url({{ src }});top: {{
+              -tile.picY! * 100
+            }}%; left: {{ -tile.picX! * 100 }}%"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-cover">
+    <button
+      *ngIf="!isPlaying && !isEnd"
+      appClick="light"
+      [opacity]="0.3"
+      (click)="start()"
+    >
+      Start Game
+    </button>
+
+    <button
+      *ngIf="isPlaying"
+      appClick
+      (click)="sharedSv.navigate('..')"
+      class="quit"
+    >
+      Quit
+    </button>
+  </div>
+</ng-container>
+
+<div class="win-container" *ngIf="isWon">
+  <app-win></app-win>
+</div>

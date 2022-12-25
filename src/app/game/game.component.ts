@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CanComponentDeactivate } from 'src/app/can-deactivate.guard';
-import { Pic, Pos, Tile } from 'src/app/shared/shared.mdel';
-import { SharedService } from 'src/app/shared/shared.service';
+import { CanComponentDeactivate } from '../can-deactivate.guard';
+import { Pic, Pos, Tile } from '../shared/shared.model';
+import { SharedService } from './../shared/shared.service';
 
 @Component({
   selector: 'app-game',
@@ -22,37 +22,20 @@ import { SharedService } from 'src/app/shared/shared.service';
 export class GameComponent
   implements OnInit, CanComponentDeactivate, OnDestroy
 {
-  num: number = 3;
+  num!: number;
   src!: string;
   id!: string;
   @ViewChild('puzzleEl') puzzleEl!: ElementRef<HTMLElement>;
   isPlaying: boolean = false;
+  isEnd: boolean = false;
   isSliding: boolean = false;
+  isWon: boolean = false;
   timeout: any;
+  audio = new Audio('./../../assets/audio/whoosh.mp3');
 
   puzzle!: Tile[];
-  pic: Pic[] = [
-    { picId: 1, picX: 0, picY: 0 },
-    { picId: 2, picX: 0, picY: 1 },
-    { picId: 3, picX: 0, picY: 2 },
-    { picId: 4, picX: 1, picY: 0 },
-    { picId: 5, picX: 1, picY: 1 },
-    { picId: 6, picX: 1, picY: 2 },
-    { picId: 7, picX: 2, picY: 0 },
-    { picId: 8, picX: 2, picY: 1 },
-    { picId: 0, picX: 2, picY: 2 },
-  ];
-  pos: Pos[] = [
-    { posId: 1, posX: 0, posY: 0 },
-    { posId: 2, posX: 0, posY: 1 },
-    { posId: 3, posX: 0, posY: 2 },
-    { posId: 4, posX: 1, posY: 0 },
-    { posId: 5, posX: 1, posY: 1 },
-    { posId: 6, posX: 1, posY: 2 },
-    { posId: 7, posX: 2, posY: 0 },
-    { posId: 8, posX: 2, posY: 1 },
-    { posId: 0, posX: 2, posY: 2 },
-  ];
+  pic!: Pic[];
+  pos!: Pos[];
 
   constructor(
     private route: ActivatedRoute,
@@ -63,22 +46,52 @@ export class GameComponent
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
+    this.num = this.route.snapshot.data['num'];
+
     this.findImg();
 
-    this.puzzle = this.genPuzArr(this.num);
+    this.puzzle = this.genPuzArr();
+    this.pos = this.genPosArr();
+    this.pic = this.genPicArr();
 
     this.cd.detectChanges();
     this.resize();
   }
 
-  genPuzArr(n: number): Tile[] {
-    const val = n * n;
+  genPuzArr(): Tile[] {
+    const val = Math.pow(this.num, 2);
     const arr: Tile[] = [];
 
     for (let i = 0; i < val; i++) {
-      const [x, y] = i.toString(n).padStart(2, '0');
+      const [x, y] = i.toString(this.num).padStart(2, '0');
 
       arr[i] = { picX: +x, picY: +y, posX: +x, posY: +y };
+    }
+
+    return arr;
+  }
+
+  genPicArr(): Pic[] {
+    const val = Math.pow(this.num, 2);
+    const arr: Pic[] = [];
+
+    for (let i = 0; i < val; i++) {
+      const [x, y] = i.toString(this.num).padStart(2, '0');
+
+      arr[i] = { id: i == val - 1 ? 0 : i + 1, picX: +x, picY: +y };
+    }
+
+    return arr;
+  }
+
+  genPosArr(): Pos[] {
+    const val = Math.pow(this.num, 2);
+    const arr: Pos[] = [];
+
+    for (let i = 0; i < val; i++) {
+      const [x, y] = i.toString(this.num).padStart(2, '0');
+
+      arr[i] = { posX: +x, posY: +y };
     }
 
     return arr;
@@ -91,14 +104,16 @@ export class GameComponent
   }
 
   @HostListener('window:resize') resize() {
-    const puzzle = this.puzzleEl.nativeElement;
+    if (this.puzzleEl) {
+      const puzzle = this.puzzleEl.nativeElement;
 
-    if (innerHeight < innerWidth) this.renderer.addClass(puzzle, 'height');
-    else this.renderer.removeClass(puzzle, 'height');
+      if (innerHeight < innerWidth) this.renderer.addClass(puzzle, 'height');
+      else this.renderer.removeClass(puzzle, 'height');
+    }
   }
 
   shuffle(): Tile[] {
-    const puzzle: Tile[] = [...this.pos];
+    const puzzle: Tile[] = [...this.pic];
 
     for (let i = puzzle.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * puzzle.length);
@@ -107,11 +122,9 @@ export class GameComponent
       puzzle[j] = temp;
     }
 
-    console.log(puzzle);
     for (let i = 0; i < puzzle.length; i++) {
-      puzzle[i] = { ...puzzle[i], ...this.pic[i] };
+      puzzle[i] = { ...this.pos[i], ...puzzle[i] };
     }
-    console.log(puzzle);
 
     return puzzle;
   }
@@ -119,64 +132,76 @@ export class GameComponent
   start() {
     if (!this.isPlaying) {
       this.isPlaying = true;
+      this.audio.load();
 
       let puzzle = this.shuffle();
 
+      // adjust using while loop
       while (!this.sharedSv.isSolveable(puzzle)) {
         puzzle = this.shuffle();
       }
 
+      puzzle = puzzle.filter((tile) => tile.id);
       this.puzzle = puzzle;
-      this.puzzle.pop();
     }
   }
 
-  swapTile(arr: Tile[]): Tile[] {
-    if (arr[0].posId && arr[1].posId) {
-      const temp = arr[0];
-      arr[0] = arr[1];
-      arr[1] = temp;
-    } else {
-      const temp = arr[arr.length - 1];
-      arr[arr.length - 1] = arr[arr.length - 2];
-      arr[arr.length - 2] = temp;
-    }
+  restart() {
+    this.isPlaying = false;
+    this.isEnd = false;
+    this.isSliding = false;
+    this.isWon = false;
 
-    return arr;
+    this.start();
   }
 
-  slide(id: number) {
+  slide(idx: number) {
     if (this.isPlaying && !this.isSliding) {
       this.isSliding = true;
+      this.audio.currentTime = 0;
 
-      let posX = +this.puzzle[id]['posX']!;
-      let posY = +this.puzzle[id]['posY']!;
+      let posX = +this.puzzle[idx]['posX']!;
+      let posY = +this.puzzle[idx]['posY']!;
 
-      if (!this.move(id, -1, 0)) {
+      if (!this.move(idx, -1, 0)) {
         // left
         const newPosX = --posX;
+        this.audio.play();
 
-        this.puzzle[id]['posX'] = newPosX;
-      } else if (!this.move(id, 1, 0)) {
+        this.puzzle[idx]['posX'] = newPosX;
+      } else if (!this.move(idx, 1, 0)) {
         // right
         const newPosX = ++posX;
+        this.audio.play();
 
-        this.puzzle[id]['posX'] = newPosX;
-      } else if (!this.move(id, 0, -1)) {
+        this.puzzle[idx]['posX'] = newPosX;
+      } else if (!this.move(idx, 0, -1)) {
         // top
         const newPosY = --posY;
+        this.audio.play();
 
-        this.puzzle[id]['posY'] = newPosY;
-      } else if (!this.move(id, 0, 1)) {
+        this.puzzle[idx]['posY'] = newPosY;
+      } else if (!this.move(idx, 0, 1)) {
         // bottom
         const newPosY = ++posY;
+        this.audio.play();
 
-        this.puzzle[id]['posY'] = newPosY;
+        this.puzzle[idx]['posY'] = newPosY;
       }
 
       setTimeout(() => {
         this.isSliding = false;
-        // console.log(this.isSolved());
+
+        if (this.isSolved()) {
+          this.isEnd = true;
+          this.isPlaying = false;
+
+          setTimeout(() => {
+            this.isWon = true;
+
+            this.timeout = setTimeout(this.restart.bind(this), 5000);
+          }, 1000);
+        }
       }, 200);
     }
   }
@@ -210,6 +235,6 @@ export class GameComponent
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this.timeout);
+    if (this.timeout) clearTimeout(this.timeout);
   }
 }

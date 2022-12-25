@@ -1,0 +1,26 @@
+<h1>Hooray! You Win!</h1>
+
+<img
+  *ngIf="num === 0"
+  width="500"
+  height="430"
+  ngSrc="./../../assets/gif/skele.gif"
+  alt
+  priority
+/>
+<img
+  *ngIf="num === 1"
+  width="500"
+  height="500"
+  ngSrc="./../../assets/gif/luffy.gif"
+  alt
+  priority
+/>
+
+<div class="redirect">
+  <p>Game restart in {{ interval }}</p>
+
+  <div class="link" routerLink="..">Select another image</div>
+</div>
+
+<audio #audio src="../../assets/audio/applause.mp3" autoplay></audio>

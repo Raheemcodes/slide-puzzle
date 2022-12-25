@@ -1,4 +1,4 @@
-@import "./../../shared/shared";
+@import "./../shared/shared";
 
 :host {
   width: 100%;
@@ -58,8 +58,8 @@
 
 .tile-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  // grid-template-columns: repeat(3, 1fr);
+  // grid-template-rows: repeat(3, 1fr);
   position: absolute;
   top: 0;
   left: 0;
@@ -114,8 +114,8 @@
 }
 
 .after {
-  width: 300%;
-  height: 300%;
+  // width: 300%;
+  // height: 300%;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left top;

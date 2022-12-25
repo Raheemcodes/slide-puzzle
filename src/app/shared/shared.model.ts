@@ -6,17 +6,15 @@ export interface Image {
 export interface Pos {
   posX: number;
   posY: number;
-  posId: number;
 }
 export interface Pic {
-  picId: number;
+  id: number;
   picX: number;
   picY: number;
 }
 
 export interface Tile {
-  posId?: number;
-  picId?: number;
+  id?: number;
   picX?: number;
   picY?: number;
   posX?: number;

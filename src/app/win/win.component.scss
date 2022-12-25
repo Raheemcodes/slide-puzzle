@@ -1,0 +1,35 @@
+@import "./../shared/shared";
+
+:host {
+  @include column-centered-start();
+  width: 100%;
+  gap: toRem(64);
+  padding: toRem(32) 0;
+
+  img {
+    width: 100%;
+    max-width: toRem(500);
+    height: auto;
+  }
+}
+
+h1 {
+  font-size: 2rem;
+
+  @media (min-width: $sm) {
+    font-size: 2.5rem;
+  }
+}
+
+.redirect {
+  font-size: 1.2rem;
+  @include column-centered();
+  gap: toRem(32);
+
+  .link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
