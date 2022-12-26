@@ -31,7 +31,7 @@ export class GameComponent
   isSliding: boolean = false;
   isWon: boolean = false;
   timeout: any;
-  audio = new Audio('./../../assets/audio/whoosh.mp3');
+  // audio = new Audio('./../../assets/audio/whoosh.mp3');
 
   puzzle!: Tile[];
   pic!: Pic[];
@@ -134,7 +134,7 @@ export class GameComponent
   start() {
     if (!this.isPlaying) {
       this.isPlaying = true;
-      this.audio.load();
+      // this.audio.load();
 
       let puzzle = [...this.shuffle()];
       console.log(puzzle);
@@ -163,7 +163,7 @@ export class GameComponent
   slide(idx: number) {
     if (this.isPlaying && !this.isSliding) {
       this.isSliding = true;
-      this.audio.currentTime = 0;
+      // this.audio.currentTime = 0;
 
       let posX = +this.puzzle[idx]['posX']!;
       let posY = +this.puzzle[idx]['posY']!;
@@ -171,25 +171,25 @@ export class GameComponent
       if (!this.move(idx, -1, 0)) {
         // left
         const newPosX = --posX;
-        this.audio.play();
+        // this.audio.play();
 
         this.puzzle[idx]['posX'] = newPosX;
       } else if (!this.move(idx, 1, 0)) {
         // right
         const newPosX = ++posX;
-        this.audio.play();
+        // this.audio.play();
 
         this.puzzle[idx]['posX'] = newPosX;
       } else if (!this.move(idx, 0, -1)) {
         // top
         const newPosY = --posY;
-        this.audio.play();
+        // this.audio.play();
 
         this.puzzle[idx]['posY'] = newPosY;
       } else if (!this.move(idx, 0, 1)) {
         // bottom
         const newPosY = ++posY;
-        this.audio.play();
+        // this.audio.play();
 
         this.puzzle[idx]['posY'] = newPosY;
       }
