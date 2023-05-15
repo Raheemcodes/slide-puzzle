@@ -29,7 +29,7 @@ export class GameComponent
   isPlaying: boolean = false;
   isEnd: boolean = false;
   isSliding: boolean = false;
-  isWon: boolean = true;
+  isWon: boolean = false;
   timeout: any;
   // audio = new Audio('./../../assets/audio/whoosh.mp3');
 
