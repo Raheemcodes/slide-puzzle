@@ -78,30 +78,30 @@
   @include centered();
   cursor: pointer;
 
-  &::before {
-    position: absolute;
-    content: "";
-    background-color: var(--main-brown);
-    top: 100%;
-    width: 60%;
-    height: toRem(9);
-    border-bottom-left-radius: toRem(8);
-    border-bottom-right-radius: toRem(8);
-    box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
-    z-index: -1;
-  }
-  &::after {
-    position: absolute;
-    content: "";
-    background-color: var(--main-brown);
-    left: 100%;
-    width: toRem(9);
-    box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
-    height: 60%;
-    border-top-right-radius: toRem(8);
-    border-bottom-right-radius: toRem(8);
-    z-index: -1;
-  }
+  // &::before {
+  //   position: absolute;
+  //   content: "";
+  //   background-color: var(--main-brown);
+  //   top: 100%;
+  //   width: 60%;
+  //   height: toRem(9);
+  //   border-bottom-left-radius: toRem(8);
+  //   border-bottom-right-radius: toRem(8);
+  //   box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
+  //   z-index: -1;
+  // }
+  // &::after {
+  //   position: absolute;
+  //   content: "";
+  //   background-color: var(--main-brown);
+  //   left: 100%;
+  //   width: toRem(9);
+  //   box-shadow: 1px 1px 5px 5px rgb(0 0 0 / 30%);
+  //   height: 60%;
+  //   border-top-right-radius: toRem(8);
+  //   border-bottom-right-radius: toRem(8);
+  //   z-index: -1;
+  // }
 }
 
 .pic-container {
