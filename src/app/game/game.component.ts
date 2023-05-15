@@ -31,7 +31,7 @@ export class GameComponent
   isSliding: boolean = false;
   isWon: boolean = false;
   timeout: any;
-  // audio = new Audio('./../../assets/audio/whoosh.mp3');
+  audio = new Audio('./../../assets/audio/whoosh.mp3');
 
   puzzle!: Tile[];
   pic!: Pic[];
@@ -46,6 +46,9 @@ export class GameComponent
   ) {}
 
   ngOnInit(): void {
+    // load audio
+    this.audio.load();
+
     this.id = this.route.snapshot.params['id'];
     this.num = this.route.snapshot.data['num'];
 
@@ -194,6 +197,7 @@ export class GameComponent
 
       const slideInterval = setTimeout(() => {
         this.isSliding = false;
+        this.audio.pause();
 
         if (this.isSolved()) {
           this.isEnd = true;
@@ -239,9 +243,8 @@ export class GameComponent
   }
 
   whoosh() {
-    let audio = new Audio('./../../assets/audio/swipe.mp3');
-    audio.load();
-    audio.play();
+    this.audio.currentTime = 0;
+    this.audio.play();
   }
 
   canDeactivate():
