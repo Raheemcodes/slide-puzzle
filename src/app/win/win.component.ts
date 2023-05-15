@@ -13,6 +13,9 @@ export class WinComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
+    let audio = new Audio('./../../assets/audio/applause.mp3');
+    audio.load();
+    audio.play();
     this.num = Math.round(Math.random() * 1);
 
     this.intervalFn = setInterval(() => {
