@@ -239,7 +239,7 @@ export class GameComponent
   }
 
   whoosh() {
-    let audio = new Audio('./../../assets/audio/whoosh.mp3');
+    let audio = new Audio('./../../assets/audio/swipe.mp3');
     audio.load();
     audio.play();
   }
