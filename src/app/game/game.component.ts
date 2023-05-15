@@ -197,7 +197,7 @@ export class GameComponent
 
       const slideInterval = setTimeout(() => {
         this.isSliding = false;
-        this.audio.pause();
+        // this.audio.pause();
 
         if (this.isSolved()) {
           this.isEnd = true;
