@@ -9,13 +9,15 @@ export class WinComponent implements OnInit, OnDestroy {
   num!: number;
   interval: number = 5;
   intervalFn: any;
+  audio!: HTMLAudioElement;
 
   constructor() {}
 
   ngOnInit(): void {
-    let audio = new Audio('./../../assets/audio/applause.mp3');
-    audio.load();
-    audio.play();
+    this.audio = new Audio('./../../assets/audio/applause.mp3');
+    this.audio.load();
+    this.audio.play();
+
     this.num = Math.round(Math.random() * 1);
 
     this.intervalFn = setInterval(() => {
@@ -28,6 +30,7 @@ export class WinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.audio.pause();
     if (this.intervalFn) clearInterval(this.intervalFn);
   }
 }
