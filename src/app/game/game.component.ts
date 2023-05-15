@@ -243,8 +243,8 @@ export class GameComponent
   }
 
   whoosh() {
-    this.audio.currentTime = 0;
-    this.audio.play();
+    // this.audio.currentTime = 0;
+    // this.audio.play();
   }
 
   canDeactivate():
